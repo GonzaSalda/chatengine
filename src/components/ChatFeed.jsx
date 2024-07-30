@@ -1,3 +1,4 @@
+import MessageForm from "./MessageForm";
 import MyMessage from "./MyMessage";
 import TheirMessage from "./TheirMessage";
 
@@ -15,14 +16,46 @@ const ChatFeed = (props) => {
 
       return (
         <div key={`msg_${index}`} style={{ width: "100%" }}>
-          <div>{isMyMessage ? <MyMessage /> : <TheirMessage />}</div>
+          <div className="message-block">
+            {isMyMessage ? (
+              <MyMessage message={message} />
+            ) : (
+              <TheirMessage
+                message={message}
+                lastMessageKey={message[[lastMessageKey]]}
+              />
+            )}
+          </div>
+          <div
+            className="read-receipts"
+            style={{
+              marginRight: isMyMessage ? "18px" : "0px",
+              marginLeft: isMyMessage ? "0px" : "68px",
+            }}
+          >
+            read-receipts
+          </div>
         </div>
       );
     });
   };
-  renderMessages();
 
-  return <div>ChatFeed</div>;
+  if (!chat) return "Loading...";
+  return (
+    <div className="chat-feed">
+      <div className="chat-title-container">
+        <div className="chat-title">
+          {chat?.title}
+          {chat.people.map((person) => `${person.person.username}`)}
+        </div>
+        {renderMessages()}
+        <div style={{ height: "100px" }} />
+        <div className="message-form-container">
+          <MessageForm {...props} chatId={activeChat} />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ChatFeed;
